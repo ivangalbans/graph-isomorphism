@@ -1,4 +1,5 @@
 import GraphIsomorphism
+import Data.Char
 
 ej_grafo1 = buildGraph [1..5] suc
     where   suc 1 = [2, 3]

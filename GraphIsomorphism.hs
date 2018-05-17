@@ -12,10 +12,14 @@ buildGraph vset adj = G vset adj
 
 -- Determine if two graphs are isomorph
 isomorphism :: (Eq a, Eq b) => Graph a -> Graph b -> Bool
-isomorphism g1 g2 = or [ (check f  g1 g2) | vp <- permutations v1 , let f = function vp v2]
+isomorphism g1 g2 = (countVertex g1 == countVertex g2) && 
+                    (or [ (check f  g1 g2) | vp <- permutations v1 , let f = function vp v2])
     where   G v1 adj1 = g1
             G v2 adj2 = g2
 
+countVertex :: (Eq a) => Graph a -> Int
+countVertex g1 = length v1
+    where G v1 adj1 = g1
 
 -------------------------------------------------------------------------------------------
 -- Given a particular permutation of vextex, determine if the bijection's
