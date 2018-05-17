@@ -1,5 +1,6 @@
 import GraphIsomorphism
 import Data.Char
+import Data.List
 
 ej_grafo1 = buildGraph [1..5] suc
     where   suc 1 = [2, 3]
@@ -8,7 +9,7 @@ ej_grafo1 = buildGraph [1..5] suc
             suc _ = []
 
 
-data Vertice = A | B | C | D | E deriving (Show, Eq, Enum)
+data Vertice = A | B | C | D | E deriving (Show, Ord, Eq, Enum)
 ej_grafo2 = buildGraph [A .. E] suc
     where   suc A = [B, C]
             suc B = [D]
@@ -18,4 +19,7 @@ ej_grafo2 = buildGraph [A .. E] suc
 
 main = do {
     putStrLn ( show (isomorphism ej_grafo1 ej_grafo2) );
+
+    putStrLn ( show (sort [2, 5, 1]) )
+
 }
