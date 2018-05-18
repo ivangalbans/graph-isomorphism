@@ -1,4 +1,4 @@
-module GraphIsomorphism (Graph, isomorphism, buildGraph) where
+module GraphIsomorphism (Graph, isomorphism, isomorphism1, buildGraph) where
 
 import Data.List
 
@@ -33,4 +33,36 @@ check f g1 g2 = and [sort (map f (adj1 vi)) == sort (adj2 (f vi)) | vi <- v1]
 function :: (Ord a, Ord b) => [a] -> [b] -> (a -> b)
 function (x:xs)  (y:ys) val     | x == val  = y
                                 | otherwise = function xs ys val
+-------------------------------------------------------------------------------------------
+
+
+
+
+
+
+-- Other Code Here---------------------------------------------------------------------------
+
+-- Determine if two graphs are isomorph
+isomorphism1 :: (Ord a, Ord b) => Graph a -> Graph b -> Bool
+isomorphism1 g1 g2 = (countVertex g1 == countVertex g2) && 
+                (or [ (check f  g1 g2) | vp <- permutations v1 , let f = function vp v2])
+    where   G v1 adj1 = g1
+            G v2 adj2 = g2
+
+countVertex1 :: (Ord a) => Graph a -> Int
+countVertex1 g1 = length v1
+    where G v1 adj1 = g1
+
+-------------------------------------------------------------------------------------------
+-- Given a particular permutation of vextex, determine if the bijection's
+-- function keep the adjacency's relation
+check1 :: (Ord a, Ord b) => (a -> b) -> Graph a -> Graph b -> Bool
+check1 f g1 g2 = and [sort (map f (adj1 vi)) == sort (adj2 (f vi)) | vi <- v1]
+    where   G v1 adj1 = g1
+            G v2 adj2 = g2
+
+-- Build a function that map an array with other by position
+function1 :: (Ord a, Ord b) => [a] -> [b] -> (a -> b)
+function1 (x:xs)  (y:ys) val    | x == val  = y
+                                | otherwise = function1 xs ys val
 -------------------------------------------------------------------------------------------
