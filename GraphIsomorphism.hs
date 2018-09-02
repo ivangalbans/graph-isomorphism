@@ -44,7 +44,7 @@ function (x:xs)  (y:ys) val     | x == val  = y
 
 -- Determine if two graphs are isomorph
 isomorphism1 :: (Ord a, Ord b) => Graph a -> Graph b -> Bool
-isomorphism1 g1 g2 = (countVertex g1 == countVertex g2) && 
+isomorphism1 g1 g2 = (countVertex g1 == countVertex g2) &&
                 (or [ (check f  g1 g2) | vp <- permutations v1 , let f = function vp v2])
     where   G v1 adj1 = g1
             G v2 adj2 = g2

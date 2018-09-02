@@ -13,10 +13,22 @@ namespace Generator
         
         public string _name;
         public int _nv;
-        Dictionary<int, List<int>> _adj;
+        protected Dictionary<int, List<int>> _adj;
 
-        int _va, _vb;
-        StreamWriter _sw;
+        protected int _va, _vb;
+        protected StreamWriter _sw;
+
+        public Graph(string name, int nv, StreamWriter sw, int va, int vb)
+        {
+            _adj = new Dictionary<int, List<int>>();
+            _name = name;
+            _nv = nv;
+            _sw = sw;
+            _va = va;
+            _vb = vb;
+            for (int i = va; i < vb; ++i)
+                _adj[i] = new List<int>();
+        }
 
         public Graph(string name, int nv, StreamWriter sw)
         {
@@ -53,7 +65,7 @@ namespace Generator
                 _sw.WriteLine($"\t\tadj {i} = {PrintList(_adj[i])}");
         }
 
-        private string PrintList(List<int> list)
+        protected string PrintList(List<int> list)
         {
             if (list.Count == 0) return "[]";
 
@@ -63,6 +75,22 @@ namespace Generator
                 s += $", {list[i]}";
 
             return s + "]";
+        }
+    }
+
+    class Ga1 : Graph
+    {
+        public Ga1(string name, int nv, StreamWriter sw) : base(name, nv, sw, 1, 4)
+        {
+            _adj[1] = new List<int>{2, 3};
+        }
+    }
+
+    class Ga2 : Graph
+    {
+        public Ga2(string name, int nv, StreamWriter sw) : base(name, nv, sw, 1, 4)
+        {
+            _adj[1] = new List<int> { 3, 2 };
         }
     }
 
@@ -115,6 +143,26 @@ namespace Generator
 
             }
 
+            //------------------------------------------------------------------------
+            var g11 = new Ga1($"ga{ntest}", 3, sw);
+            var g21 = new Ga2($"gb{ntest}", 3, sw);
+            sw.WriteLine();
+            sw.WriteLine();
+
+            g11.Write();
+
+            sw.WriteLine();
+
+            g21.Write();
+
+            Console.WriteLine($"Generated Graph (Name: {g11._name}, Vertex: {g11._nv})");
+            Console.WriteLine($"Generated Graph (Name: {g21._name}, Vertex: {g21._nv})");
+
+            Console.WriteLine();
+
+
+            //-------------------------------------------------------------------------
+
             sw.WriteLine();
             sw.WriteLine();
 
@@ -124,7 +172,15 @@ namespace Generator
                 sw.WriteLine($"outfile{i} = \"data/test.{PrintNum(i)}.out\"");
             }
 
-            
+            //---------------------------------------------------------------
+
+            sw.WriteLine($"outfile{ntest} :: String");
+            sw.WriteLine($"outfile{ntest} = \"data/test.{PrintNum(ntest)}.out\"");
+
+            //---------------------------------------------------------------
+
+
+
             sw.WriteLine();
             sw.WriteLine("main = do {");
 
@@ -141,6 +197,19 @@ namespace Generator
 
                 swtmp.Close();
             }
+
+            //-----------------------------------------------------------------------------------
+
+            StreamWriter swtmp1 = new StreamWriter($"../../../../data/test.{PrintNum(ntest)}.in");
+            swtmp1.Write("True");
+
+            string ans1 = $"show ( (isomorphism ga{ntest} gb{ntest}) == ({nameMethod} ga{ntest} gb{ntest}) )";
+            sw.WriteLine($"\twriteFile outfile{ntest} ({ans1}) ;");
+
+            swtmp1.Close();
+
+            //-----------------------------------------------------------------------------------
+
 
             sw.WriteLine();
             sw.WriteLine("}");
